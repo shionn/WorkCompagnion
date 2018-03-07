@@ -3,6 +3,7 @@ package org.sh.netfinca;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +29,12 @@ public class WorkCompagnion {
 	private String message = "greenflash";
 	private SerialPort port;
 
+	private static final List<String> PORTS = Arrays.asList("/dev/ttyACM0", "/dev/ttyUSB0");
+
 	private void start() throws InterruptedException, PortInUseException {
 		List<CommPortIdentifier> ports = Collections.list(CommPortIdentifier.getPortIdentifiers());
 		ports.stream().map(p -> p.getName()).forEach(n -> System.out.println(n));
-		CommPortIdentifier portId = ports.stream().filter(p -> p.getName().equals("/dev/ttyUSB0"))
+		CommPortIdentifier portId = ports.stream().filter(p -> PORTS.contains(p.getName()))
 				.findFirst().get();
 		port = (SerialPort) portId.open("tutu", 9600);
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
